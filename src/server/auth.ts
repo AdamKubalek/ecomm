@@ -5,9 +5,11 @@ import {
   type DefaultSession,
 } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "../env.mjs";
 import { prisma } from "./db";
+import { User } from "@prisma/client";
 
 /**
  * Module augmentation for `next-auth` types.
@@ -38,6 +40,12 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  **/
 export const authOptions: NextAuthOptions = {
+  session: {
+    strategy: "jwt",
+  },
+  pages: {
+    signIn: "/login",
+  },
   callbacks: {
     session({ session, user }) {
       if (session.user) {
@@ -52,6 +60,43 @@ export const authOptions: NextAuthOptions = {
     DiscordProvider({
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
+    }),
+    CredentialsProvider({
+      // The name to display on the sign in form (e.g. 'Sign in with...')
+      name: "Credentials",
+      // The credentials is used to generate a suitable form on the sign in page.
+      // You can specify whatever fields you are expecting to be submitted.
+      // e.g. domain, username, password, 2FA token, etc.
+      // You can pass any HTML attribute to the <input> tag through the object.
+      credentials: {},
+      async authorize(credentials, req) {
+        // You need to provide your own logic here that takes the credentials
+        // submitted and returns either a object representing a user or value
+        // that is false/null if the credentials are invalid.
+        // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
+        // You can also use the `req` object to obtain additional parameters
+        // (i.e., the request IP address)
+        const { email, password } = credentials as {
+          email: string;
+          password: string;
+        };
+
+        const user = (await prisma.user.findUnique({
+          where: { email: email },
+        })) as User;
+
+        if (!user) {
+          throw new Error("User not found");
+        } else if (user.email !== email || user.password !== password) {
+          throw new Error("Invalid email or password");
+        } else {
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+          };
+        }
+      },
     }),
     /**
      * ...add more providers here
