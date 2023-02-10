@@ -14,7 +14,6 @@ const login = () => {
     if (input.current) {
       const email = input.current.elements[0] as HTMLInputElement;
       const password = input.current.elements[1] as HTMLInputElement;
-
       const response = await signIn('credentials', {
         email: email.value,
         password: password.value,
@@ -28,8 +27,6 @@ const login = () => {
       console.log(response)
     }
   };
-
-  
 
   // const { data: secretMessage } = api.example.getSecretMessage.useQuery(
   //   undefined, // no input

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 import { api } from "../utils/api";
+import Item from "../components/Item";
 
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
@@ -11,7 +12,6 @@ const Home: NextPage = () => {
     undefined, // no input
     { enabled: sessionData?.user !== undefined }
   );
-
   return (
     <>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
@@ -26,6 +26,7 @@ const Home: NextPage = () => {
           >
             {sessionData ? "Sign out" : "Sign in"}
           </button>
+          <Item />
         </div>
       </main>
     </>
