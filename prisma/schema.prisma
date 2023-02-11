@@ -22,12 +22,14 @@ model Example {
 
 model Item {
     id          String   @id @default(cuid())
+    userId      String
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
     name        String
-    price       Int
-    description String
-    image       String
+    price       String  
+    description String @db.Text
+    image       String @db.Text
+    user        User   @relation(fields: [userId], references: [id])
 }
 
 // Necessary for Next auth
@@ -66,6 +68,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    items         Item[]
 }
 
 model VerificationToken {

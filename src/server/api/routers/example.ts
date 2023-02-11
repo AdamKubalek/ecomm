@@ -1,5 +1,4 @@
 import { z } from "zod";
-
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
 export const exampleRouter = createTRPCRouter({
@@ -19,7 +18,7 @@ export const exampleRouter = createTRPCRouter({
     return "you can now see this secret message!";
   }),
 
-  createUser: publicProcedure
+  createNewUser: publicProcedure
     .input(
       z.object({
         name: z.string(),
@@ -50,11 +49,38 @@ export const exampleRouter = createTRPCRouter({
           data: {
             name: input.name,
             email: input.email,
-            password: hasToken(input.password),
+            password: input.password,
           },
         });
 
         return user;
+      } catch (error) {
+        if (error instanceof Error) throw new Error(error.message);
+      }
+    }),
+  createNewItem: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        description: z.string(),
+        price: z.string(),
+        image: z.string(),
+        userId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const item = await ctx.prisma.item.create({
+          data: {
+            name: input.name,
+            description: input.description,
+            price: input.price,
+            image: input.image,
+            userId: input.userId,
+          },
+        });
+
+        return item;
       } catch (error) {
         if (error instanceof Error) throw new Error(error.message);
       }

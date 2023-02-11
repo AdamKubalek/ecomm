@@ -40,20 +40,8 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  **/
 export const authOptions: NextAuthOptions = {
-  session: {
-    strategy: "jwt",
-  },
   pages: {
     signIn: "/login",
-  },
-  callbacks: {
-    session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
-        // session.user.role = user.role; <-- put other properties on the session here
-      }
-      return session;
-    },
   },
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -90,11 +78,8 @@ export const authOptions: NextAuthOptions = {
         } else if (user.email !== email || user.password !== password) {
           throw new Error("Invalid email or password");
         } else {
-          return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-          };
+          // console.log(user);
+          return user;
         }
       },
     }),
@@ -108,6 +93,23 @@ export const authOptions: NextAuthOptions = {
      * @see https://next-auth.js.org/providers/github
      **/
   ],
+  callbacks: {
+    async session({ session, token }) {
+      console.log("########session callback", { session });
+      session.user.id = String(token.id);
+      return session;
+    },
+    async jwt({ token, user }) {
+      console.log("########jwt callback", { token });
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+  },
+  session: {
+    strategy: "jwt",
+  },
 };
 
 /**

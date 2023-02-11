@@ -14,7 +14,7 @@ const Registration = () => {
     null
   );
 
-  const mutation = api.example.createUser.useMutation();
+  const createNewUser = api.example.createNewUser.useMutation();
 
   const formHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -43,7 +43,7 @@ const Registration = () => {
     }
 
     if (data.name && data.email && data.password && data.passwordConfirmation) {
-      mutation.mutate({
+      createNewUser.mutate({
         name: data.name,
         email: data.email,
         password: data.password,

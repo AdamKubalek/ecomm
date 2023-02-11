@@ -1,7 +1,8 @@
-import { signIn, signOut, useSession } from "next-auth/react";
+import { getSession, signIn, signOut, useSession } from "next-auth/react";
 import { useRef, useState } from "react";
 import Card from "../components/CardLogReg";
 import { api } from "../utils/api";
+
 
 const login = () => {
   console.log("### Refreshing");
@@ -14,20 +15,22 @@ const login = () => {
     if (input.current) {
       const email = input.current.elements[0] as HTMLInputElement;
       const password = input.current.elements[1] as HTMLInputElement;
+
       const response = await signIn('credentials', {
         email: email.value,
         password: password.value,
         redirect: false,
-        callbackUrl: 'http://localhost:3000',
       })
 
-      if (response?.error) {
-        setError(response.error)
-      }
-      console.log(response)
+      // if (response?.error) {
+      //   setError(response.error)
+      // }
+      console.log({ response })
+      const session = await getSession();
+      console.log({ session })
     }
   };
-
+  
   // const { data: secretMessage } = api.example.getSecretMessage.useQuery(
   //   undefined, // no input
   //   { enabled: sessionData?.user !== undefined }
