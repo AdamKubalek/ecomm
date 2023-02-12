@@ -3,7 +3,8 @@ import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 import { api } from "../utils/api";
-import Item from "../components/Item";
+import AddItem from "../components/AddItem";
+import ItemsList from "../components/ItemsList";
 
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
@@ -15,19 +16,17 @@ const Home: NextPage = () => {
   return (
     <>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <div className="flex flex-col items-center justify-center gap-4">
-          <p className="text-center text-2xl text-white">
-            {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-            {secretMessage && <span> - {secretMessage}</span>}
-          </p>
-          <button
-            onClick={sessionData ? () => signOut() : () => signIn()}
-            className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-          >
-            {sessionData ? "Sign out" : "Sign in"}
-          </button>
-          <Item />
-        </div>
+        <p className="text-center text-2xl text-white">
+          {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
+          {secretMessage && <span> - {secretMessage}</span>}
+        </p>
+        <button
+          onClick={sessionData ? () => signOut() : () => signIn()}
+          className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+        >
+          {sessionData ? "Sign out" : "Sign in"}
+        </button>
+        <ItemsList />
       </main>
     </>
   );

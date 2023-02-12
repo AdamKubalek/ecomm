@@ -3,7 +3,7 @@ import { api } from "../utils/api";
 import Card from "./CardLogReg";
 import { useSession } from "next-auth/react";
 
-const item = () => {
+const AddItem = () => {
   const { data: sessionData } = useSession();
   const createNewItem = api.example.createNewItem.useMutation();
   const [newItem, setNewItem] = useState({
@@ -108,4 +108,4 @@ const item = () => {
   );
 };
 
-export default item;
+export default AddItem;
