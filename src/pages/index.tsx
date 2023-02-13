@@ -1,34 +1,40 @@
 import { type NextPage } from "next";
-import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
-
+import { useEffect, useState } from "react";
 import { api } from "../utils/api";
-import AddItem from "../components/AddItem";
 import ItemsList from "../components/ItemsList";
+import Pagination from "../components/Pagination";
+import Layout from "../components/Layout";
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
-  const { data: sessionData } = useSession();
-  const { data: secretMessage } = api.example.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined }
-  );
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(6);
+
+  const allItems = api.example.getAllItems.useQuery();
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = allItems.data?.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
   return (
-    <>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <p className="text-center text-2xl text-white">
-          {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-          {secretMessage && <span> - {secretMessage}</span>}
-        </p>
-        <button
-          onClick={sessionData ? () => signOut() : () => signIn()}
-          className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-        >
-          {sessionData ? "Sign out" : "Sign in"}
-        </button>
-        <ItemsList />
-      </main>
-    </>
+    <div className="flex h-screen flex-col items-stretch">
+      <Layout>
+        <main className="flex grow flex-col items-center justify-between  ">
+          <h1 className="text-4xl font-bold text-purple-900 p-4">Current Items</h1>
+          <div className="text-center">
+            {currentItems && <ItemsList items={currentItems} />}
+          </div>
+          {allItems.data?.length && (
+            <Pagination
+              itemsPerPage={itemsPerPage}
+              totalItems={allItems.data?.length}
+              paginate={paginate}
+            />
+          )}
+        </main>
+      </Layout>
+    </div>
   );
 };
 

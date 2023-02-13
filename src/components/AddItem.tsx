@@ -11,22 +11,22 @@ const AddItem = () => {
     description: "",
     price: "",
     image: "",
-    userId: ""
+    userId: "",
   });
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (sessionData?.user?.id) {
       console.log(newItem);
-      createNewItem.mutate({ ...newItem, userId: sessionData?.user?.id});
+      createNewItem.mutate({ ...newItem, userId: sessionData?.user?.id });
     }
     setNewItem({
       name: "",
       description: "",
       price: "",
       image: "",
-      userId: ""
-    })
+      userId: "",
+    });
   };
 
   return (
@@ -85,7 +85,7 @@ const AddItem = () => {
               Image
             </label>
             <input
-              type="url"
+              type="text"
               className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
               value={newItem.image}
               onChange={(e) =>
