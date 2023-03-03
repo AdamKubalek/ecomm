@@ -1,5 +1,5 @@
-import { getSession, signIn, signOut, useSession } from "next-auth/react";
-import { useRef, useEffect, useState } from "react";
+import { getSession, signIn } from "next-auth/react";
+import { useRef, useState } from "react";
 import Layout from "../components/Layout";
 
 const Login = () => {
@@ -7,8 +7,8 @@ const Login = () => {
   const input = useRef<HTMLFormElement>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (input.current) {
       const email = input.current.elements[0] as HTMLInputElement;
       const password = input.current.elements[1] as HTMLInputElement;

@@ -14,11 +14,7 @@ export const exampleRouter = createTRPCRouter({
     return ctx.prisma.item.findMany({});
   }),
 
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
-  }),
-
-  createNewUser: publicProcedure
+  registration: publicProcedure
     .input(
       z.object({
         name: z.string(),
@@ -51,6 +47,10 @@ export const exampleRouter = createTRPCRouter({
             email: input.email,
             password: input.password,
           },
+          select: {
+            name: true,
+            email: true,
+          }
         });
 
         return user;

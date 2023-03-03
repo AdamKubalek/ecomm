@@ -14,7 +14,7 @@ const AddItem = () => {
     userId: "",
   });
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (sessionData?.user?.id) {
       console.log(newItem);

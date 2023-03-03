@@ -1,4 +1,4 @@
-import React, { Dispatch } from "react";
+import React from "react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
@@ -9,7 +9,7 @@ const Pagination = ({
 }: {
   itemsPerPage: number;
   totalItems: number;
-  paginate: Function;
+  paginate: (a: number) => void;
 }) => {
   const pageNumbers = [];
   const [scrollPosition, setScrollPosition] = useState(0);

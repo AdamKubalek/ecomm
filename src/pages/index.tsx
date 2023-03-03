@@ -1,6 +1,5 @@
 import { type NextPage } from "next";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { api } from "../utils/api";
 import ItemsList from "../components/ItemsList";
 import Pagination from "../components/Pagination";
@@ -21,7 +20,9 @@ const Home: NextPage = () => {
     <div className="flex h-screen flex-col items-stretch">
       <Layout>
         <main className="flex grow flex-col items-center justify-between  ">
-          <h1 className="text-4xl font-bold text-purple-900 p-4">Current Items</h1>
+          <h1 className="p-4 text-4xl font-bold text-purple-900">
+            Current Items
+          </h1>
           <div className="text-center">
             {currentItems && <ItemsList items={currentItems} />}
           </div>
